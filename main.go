@@ -26,6 +26,9 @@ func main(){
 	//setup the routing confg
 	r:=Routes.SetupRouter()
 
+	//Create a shared container for concurrency handling
+	Models.container := Models.ContainerStruct{}
+
 	//Run the router
 	r.Run()
 }
