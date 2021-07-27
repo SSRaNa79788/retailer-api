@@ -1,32 +1,45 @@
 package Models
 
-import "sync"
+import (
+	"sync"
+	"time"
+)
 
 type ContainerStruct struct{
 	mapp map[string]int
 	mu sync.Mutex
 }
-var container ContainerStruct
+var Container = ContainerStruct{}
 
 func CanAcquireLock(product_id string)bool{
-	container.mu.Lock()
-	if _,ok := container.mapp[product_id] ; ok==true{
-		container.mu.Unlock()
+	Container.mu.Lock()
+	if _,ok := Container.mapp[product_id] ; ok==true{
+		Container.mu.Unlock()
 		return false
 	}else{
+		Container.mapp[product_id]=1
+		Container.mu.Unlock()
 		return true
 	}
 }
 
-func LockContainer(product_id string){
-	container.mu.Lock()
-	container.mapp[product_id]=1
-	container.mu.Unlock()
+func RemoveProductFromContainer(product_id string){
+	Container.mu.Lock()
+	delete(Container.mapp,product_id)
+	Container.mu.Unlock()
 }
 
-func UnlockContainer(product_id string){
-	delete(container.mapp,product_id)
-	container.mu.Unlock()
+func TryToAcquireLock(product_id string) bool{
+	for i:=0;i<100;i++{
+		time.Sleep(time.Millisecond)
+		if CanAcquireLock(product_id)==false {
+			continue
+		} else {
+			return true
+		}
+	}
+	return false
 }
+
 
 

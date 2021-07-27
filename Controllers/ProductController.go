@@ -1,29 +1,30 @@
 package Controllers
 
 import (
+	"github.com/gin-gonic/gin"
 	"net/http"
-	"retailer-api/Models"
+	"retailer-api/Models/Product"
 )
 
 //Product Methods
 func AddProduct(c * gin.Context){
-	var product Models.Product
+	var product Product.Product
 	c.BindJSON(&product)
-	if err:=Models.AddProduct(&order) ; err!=nil{
-		c.JSON(http.StatusOK,order)
+	if err:= Product.AddProduct(&product) ; err!=nil{
+		c.JSON(http.StatusOK,product)
 	}else{
 		c.AbortWithStatus(http.StatusNotFound)
 	}
 }
 
 func UpdateProduct(c * gin.Context){
-	product_id:=c.Params.ByName()
-	var product Models.Product
+	product_id:=c.Params.ByName("id")
+	var product Product.Product
 	c.BindJSON(&product)
-	if err:= Models.GetProduct(&product,product_id) ; err!=nil{
+	if err:= Product.GetProduct(&product,product_id) ; err!=nil{
 		c.AbortWithStatus(http.StatusNotFound)
 	}else{//perform updation
-		if err:=Models.UpdateProduct(&product,product_id) ; err!=nil{
+		if err:= Product.UpdateProduct(&product,product_id) ; err!=nil{
 			c.AbortWithStatus(http.StatusNotFound)
 		}else{
 			c.JSON(http.StatusOK,product)
@@ -32,9 +33,9 @@ func UpdateProduct(c * gin.Context){
 }
 
 func GetProduct(c * gin.Context){
-	product_id := c.Params.ByName()
-	var product Models.Product
-	if err:=Models.GetProducts(&product,product_id) ; err!=nil{
+	product_id := c.Params.ByName("id")
+	var product Product.Product
+	if err:= Product.GetProduct(&product,product_id) ; err!=nil{
 		c.AbortWithStatus(http.StatusNotFound)
 	}else{
 		c.JSON(http.StatusOK,product)
@@ -42,8 +43,8 @@ func GetProduct(c * gin.Context){
 }
 
 func GetProducts(c * gin.Context){
-	var products []Models.Product
-	if err:=Models.GetProducts(&products) ; err!=nil{
+	var products []Product.Product
+	if err:= Product.GetProducts(&products) ; err!=nil{
 		c.AbortWithStatus(http.StatusNotFound)
 	}else{
 		c.JSON(http.StatusOK,products)

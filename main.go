@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
-	"retailer-api/Routes"
-	"retailer-api/Config"
-	"retailer-api/Models"
 	"github.com/jinzhu/gorm"
+	"retailer-api/Config"
+	"retailer-api/Models/Order"
+	"retailer-api/Models/Product"
+	"retailer-api/Routes"
 )
+var err error
 
 func main(){
 	//create database conection
@@ -21,14 +23,15 @@ func main(){
 	defer Config.DB.Close()
 
 	//Do automigration
-	Config.DB.AutoMigrate(&Models.Order{},&Models.Product{})
+	Config.DB.AutoMigrate(&Order.Order{},&Product.Product{})
 
 	//setup the routing confg
 	r:=Routes.SetupRouter()
 
 	//Create a shared container for concurrency handling
-	Models.container := Models.ContainerStruct{}
-	Models.ORD_ID=0
+	//Models.Container := Models.ContainerStruct{}
+
+	Order.Orderidhandler = Order.OrderIDHandler{ORD_ID: 1}
 
 	//Run the router
 	r.Run()
