@@ -9,7 +9,9 @@ type ContainerStruct struct{
 var container ContainerStruct
 
 func CanAcquireLock(product_id string)bool{
+	container.mu.Lock()
 	if _,ok := container.mapp[product_id] ; ok==true{
+		container.mu.Unlock()
 		return false
 	}else{
 		return true
@@ -23,7 +25,6 @@ func LockContainer(product_id string){
 }
 
 func UnlockContainer(product_id string){
-	container.mu.Lock()
 	delete(container.mapp,product_id)
 	container.mu.Unlock()
 }

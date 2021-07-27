@@ -28,6 +28,7 @@ func main(){
 
 	//Create a shared container for concurrency handling
 	Models.container := Models.ContainerStruct{}
+	Models.ORD_ID=0
 
 	//Run the router
 	r.Run()
